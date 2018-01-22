@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     public static final int RC_LOGIN = 1;
@@ -19,6 +21,22 @@ public class MainActivity extends AppCompatActivity {
 //            startActivity(intent);
             startActivityForResult(intent, RC_LOGIN);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_setting){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
