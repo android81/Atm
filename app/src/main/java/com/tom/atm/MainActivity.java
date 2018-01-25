@@ -9,18 +9,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final int RC_LOGIN = 1;
     boolean logon = false;
     String[] func = {"餘額查詢", "交易明細", "最新消息", "投資理財", "離開"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //使用GridView
+        GridView grid = findViewById(R.id.grid);
+        ArrayAdapter gAdapter =
+                new ArrayAdapter(this, android.R.layout.simple_list_item_1, func);
+        grid.setAdapter(gAdapter);
+        grid.setOnItemClickListener(this);
+
         //使用Spinner
         Spinner notify = findViewById(R.id.spinner);
         final ArrayAdapter nAdapter = ArrayAdapter.createFromResource(
@@ -47,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);
         //測試TestActivity
 //        startActivity(new Intent(this, TestActivity.class));
-        if (!logon){ //如未登入, 則開啟LoginActivity
+        if (!logon) { //如未登入, 則開啟LoginActivity
             Intent intent = new Intent(this, LoginActivity.class);
 //            startActivity(intent);
             startActivityForResult(intent, RC_LOGIN);
@@ -63,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_setting){
+        if (id == R.id.action_setting) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -73,14 +82,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN){
-            if (resultCode == RESULT_OK){
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
                 String uid = data.getStringExtra("LOGIN_USERID");
                 String pw = data.getStringExtra("LOGIN_PASSWD");
                 Log.d("RESULT", uid + "/" + pw);
-            }else{
+            } else {
                 finish();
             }
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                finish();
+                break;
+        }
+
     }
 }
