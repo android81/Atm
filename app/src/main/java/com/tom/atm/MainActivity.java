@@ -7,17 +7,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final int RC_LOGIN = 1;
     boolean logon = false;
     String[] func = {"餘額查詢", "交易明細", "最新消息", "投資理財", "離開"};
+    int[] icons = {R.drawable.func_balance,
+            R.drawable.func_history,
+            R.drawable.func_news,
+            R.drawable.func_finance,
+            R.drawable.func_exit };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         //使用GridView
         GridView grid = findViewById(R.id.grid);
-        ArrayAdapter gAdapter =
-                new ArrayAdapter(this, android.R.layout.simple_list_item_1, func);
+        IconAdapter gAdapter = new IconAdapter();
+        /*ArrayAdapter gAdapter =
+                new ArrayAdapter(this, android.R.layout.simple_list_item_1, func);*/
         grid.setAdapter(gAdapter);
         grid.setOnItemClickListener(this);
 
@@ -63,6 +73,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    class IconAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return func.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return func[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return icons[position];
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            if (row == null){
+                row = getLayoutInflater().inflate(R.layout.item_row, null);
+                ImageView image = row.findViewById(R.id.item_image);
+                TextView text = row.findViewById(R.id.item_text);
+                image.setImageResource(icons[position]);
+                text.setText(func[position]);
+            }
+            return row;
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -95,16 +136,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            case 0:
+        switch ((int)id) {
+            case R.drawable.func_balance:
                 break;
-            case 1:
+            case R.drawable.func_history:
                 break;
-            case 2:
+            case R.drawable.func_news:
                 break;
-            case 3:
+            case R.drawable.func_finance:
                 break;
-            case 4:
+            case R.drawable.func_exit: //結束
                 finish();
                 break;
         }
