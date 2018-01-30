@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +79,8 @@ public class TransActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("JSON", s);
-            parseJSON(s);
+            parseGson(s);
+//            parseJSON(s);
         }
     }
 
@@ -97,5 +101,14 @@ public class TransActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void parseGson(String s){
+        Gson gson = new Gson();
+        ArrayList<Transaction> list =
+                gson.fromJson(s,
+                        new TypeToken<ArrayList<Transaction>>(){}.getType());
+        Log.d("GSON",list.size()+"/"+list.get(0).getAmount());
+
     }
 }
