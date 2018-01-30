@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +45,9 @@ public class TransActivity extends AppCompatActivity {
                 String json = response.body().string();
                 Log.d("OKHTTP", json);
                 //解析JSON
-                parseJSON(json);
+                parseJackson(json);
+//                parseGson(json);
+//                parseJSON(json);
             }
 
             @Override
@@ -79,8 +84,7 @@ public class TransActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("JSON", s);
-            parseGson(s);
-//            parseJSON(s);
+            parseJSON(s);
         }
     }
 
@@ -111,4 +115,17 @@ public class TransActivity extends AppCompatActivity {
         Log.d("GSON",list.size()+"/"+list.get(0).getAmount());
 
     }
+
+    private void parseJackson(String s){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            ArrayList<Transaction> list =
+                    objectMapper.readValue(s,
+                            new TypeReference<List<Transaction>>(){});
+            Log.d("JACKSON",list.size()+"/"+list.get(0).getAmount());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
