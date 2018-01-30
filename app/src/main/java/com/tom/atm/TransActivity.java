@@ -3,6 +3,8 @@ package com.tom.atm;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -113,19 +115,30 @@ public class TransActivity extends AppCompatActivity {
                 gson.fromJson(s,
                         new TypeToken<ArrayList<Transaction>>(){}.getType());
         Log.d("GSON",list.size()+"/"+list.get(0).getAmount());
-
     }
 
     private void parseJackson(String s){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            ArrayList<Transaction> list =
+            final ArrayList<Transaction> list =
                     objectMapper.readValue(s,
                             new TypeReference<List<Transaction>>(){});
             Log.d("JACKSON",list.size()+"/"+list.get(0).getAmount());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setupRecyclerView(list);
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void setupRecyclerView(List<Transaction> list){
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        TransactionAdapter adapter = new TransactionAdapter(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 }
