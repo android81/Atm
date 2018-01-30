@@ -5,11 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -76,7 +81,21 @@ public class TransActivity extends AppCompatActivity {
     }
 
     private void parseJSON(String s) {
-
+        ArrayList<Transaction> trans = new ArrayList<>();
+        try {
+            JSONArray array = new JSONArray(s);
+            for (int i=0; i<array.length(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                String account = obj.getString("account");
+                String date = obj.getString("date");
+                int amount = obj.getInt("amount");
+                int type = obj.getInt("type");
+                Log.d("JSON:",account+"/"+date+"/"+amount+"/"+type);
+                Transaction t = new Transaction(account, date, amount, type);
+                trans.add(t);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
-
 }
